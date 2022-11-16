@@ -9,7 +9,7 @@ class UserService {
 
     const result = await connections.execute(statement, [name, password]);
 
-    return "创建用户成功";
+    return result;
   }
 }
 
