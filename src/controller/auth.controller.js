@@ -10,6 +10,10 @@ class AuthController {
     });
     ctx.response.body = { id, name, token };
   }
+
+  async success(ctx, next) {
+    ctx.response.body = "授权成功~";
+  }
 }
 
 module.exports = new AuthController();

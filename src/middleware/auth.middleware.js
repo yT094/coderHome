@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const { PUBLIC_KEY } = require("../app/config");
+
 const service = require("../service/user.service");
 const errorTypes = require("../constants/errors-types");
 
@@ -34,6 +37,30 @@ const verifyLogin = async (ctx, next) => {
   await next();
 };
 
+const verifyAuth = async (ctx, next) => {
+  console.log("验证登录授权的middleware~");
+  // 1.获取token
+  const authorization = ctx.headers.authorization;
+  if (!authorization) {
+    const error = new Error(errorTypes.UNAUTHORIZATION);
+    return ctx.app.emit("error", error, ctx);
+  }
+  const token = authorization.replace("Bearer ", "");
+
+  // 2.验证token (id/name/iat/exp)
+  try {
+    const result = jwt.verify(token, PUBLIC_KEY, {
+      algorithms: ["RS256"],
+    });
+    ctx.response.user = result;
+    await next();
+  } catch (err) {
+    const error = new Error(errorTypes.UNAUTHORIZATION);
+    return ctx.app.emit("error", error, ctx);
+  }
+};
+
 module.exports = {
   verifyLogin,
+  verifyAuth,
 };
