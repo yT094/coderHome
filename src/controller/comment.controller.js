@@ -10,6 +10,12 @@ class CommentController {
     const result = await commentService.create(userId, content);
     ctx.response.body = result;
   }
+
+  async list(ctx, next) {
+    const { commentId } = ctx.params;
+    const result = await commentService.getCommentById(commentId);
+    ctx.response.body = result;
+  }
 }
 
 module.exports = new CommentController();
