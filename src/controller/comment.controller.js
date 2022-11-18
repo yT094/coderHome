@@ -11,9 +11,15 @@ class CommentController {
     ctx.response.body = result;
   }
 
-  async list(ctx, next) {
+  async detail(ctx, next) {
     const { commentId } = ctx.params;
     const result = await commentService.getCommentById(commentId);
+    ctx.response.body = result;
+  }
+
+  async list(ctx, next) {
+    const { offset, size } = ctx.query;
+    const result = await commentService.getCommentList(offset, size);
     ctx.response.body = result;
   }
 }
