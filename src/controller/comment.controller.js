@@ -32,6 +32,12 @@ class CommentController {
     const result = await commentService.update(content, commentId);
     ctx.response.body = result;
   }
+
+  async remove(ctx, next) {
+    const { commentId } = ctx.params;
+    const result = await commentService.remove(commentId);
+    ctx.response.body = result;
+  }
 }
 
 module.exports = new CommentController();
