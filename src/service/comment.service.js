@@ -29,6 +29,12 @@ class CommentService {
     const [result] = await connections.execute(statement, [offset, size]);
     return result;
   }
+
+  async update(content, commentId) {
+    const statement = `UPDATE comment SET content = ? WHERE id = ?;`;
+    const [result] = await connections.execute(statement, [content, commentId]);
+    return result;
+  }
 }
 
 module.exports = new CommentService();

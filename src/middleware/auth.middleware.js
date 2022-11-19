@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { PUBLIC_KEY } = require("../app/config");
 
-const service = require("../service/user.service");
+const userService = require("../service/user.service");
+const authService = require("../service/auth.service");
+
 const errorTypes = require("../constants/errors-types");
 
 const md5password = require("../utils/password-handle");
@@ -19,7 +21,7 @@ const verifyLogin = async (ctx, next) => {
   }
 
   // 3.判断用户是否存在
-  const result = await service.getUserByName(name);
+  const result = await userService.getUserByName(name);
   const user = result[0];
   if (!user) {
     const error = new Error(errorTypes.USER_DOES_NOT_EXISTS);
@@ -60,7 +62,24 @@ const verifyAuth = async (ctx, next) => {
   }
 };
 
+const verifyPermission = async (ctx, next) => {
+  console.log("验证权限的middleware");
+  // 1.获取参数
+  const { commentId } = ctx.params;
+  const { id } = ctx.response.user;
+
+  // 2.查询是否具备权限
+  const isPermission = await authService.checkSource(commentId, id);
+  if (!isPermission) {
+    const error = new Error(errorTypes.UNPERMISSION);
+    return ctx.app.emit("error", error, ctx);
+  }
+
+  await next();
+};
+
 module.exports = {
   verifyLogin,
   verifyAuth,
+  verifyPermission,
 };

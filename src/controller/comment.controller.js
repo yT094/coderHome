@@ -28,7 +28,9 @@ class CommentController {
     // fix: 异常无效的token,可能是解构的值不对
     // const { userId } = ctx.response.body;
     const { id } = ctx.response.user;
-    ctx.response.body = "修改评论成功~" + id;
+    const { content } = ctx.request.body;
+    const result = await commentService.update(content, commentId);
+    ctx.response.body = result;
   }
 }
 
