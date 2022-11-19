@@ -65,11 +65,11 @@ const verifyAuth = async (ctx, next) => {
 const verifyPermission = async (ctx, next) => {
   console.log("验证权限的middleware");
   // 1.获取参数
-  const { commentId } = ctx.params;
+  const { momentId } = ctx.params;
   const { id } = ctx.response.user;
 
   // 2.查询是否具备权限
-  const isPermission = await authService.checkSource(commentId, id);
+  const isPermission = await authService.checkSource(momentId, id);
   if (!isPermission) {
     const error = new Error(errorTypes.UNPERMISSION);
     return ctx.app.emit("error", error, ctx);
