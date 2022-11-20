@@ -24,7 +24,12 @@ class MomentService {
 
   async getMomentList(offset, size) {
     const statement = `
-    ${sqlFragment}
+    SELECT
+      m.id id, m.content content, m.createAt createTime, m.updateAt updateTime,
+      JSON_OBJECT('id', u.id, 'name', u.name) user,
+      (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) commentCount
+    FROM moment m
+    LEFT JOIN users u ON m.user_id = u.id
     LIMIT ?,?`;
     const [result] = await connections.execute(statement, [offset, size]);
     return result;
