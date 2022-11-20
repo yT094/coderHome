@@ -62,20 +62,28 @@ const verifyAuth = async (ctx, next) => {
   }
 };
 
-const verifyPermission = async (ctx, next) => {
-  console.log("验证权限的middleware");
-  // 1.获取参数
-  const { momentId } = ctx.params;
-  const { id } = ctx.response.user;
+// 通过闭包的形式实现 verifyPermission
+const verifyPermission = (tableName) => {
+  return async (ctx, next) => {
+    console.log("验证权限的middleware");
+    // 1.获取参数
+    const [resourceKey] = Object.keys(ctx.params);
+    const resourceId = ctx.params[resourceKey];
+    const { id } = ctx.response.user;
 
-  // 2.查询是否具备权限
-  const isPermission = await authService.checkSource(momentId, id);
-  if (!isPermission) {
-    const error = new Error(errorTypes.UNPERMISSION);
-    return ctx.app.emit("error", error, ctx);
-  }
+    // 2.查询是否具备权限
+    const isPermission = await authService.checkSource(
+      tableName,
+      resourceId,
+      id
+    );
+    if (!isPermission) {
+      const error = new Error(errorTypes.UNPERMISSION);
+      return ctx.app.emit("error", error, ctx);
+    }
 
-  await next();
+    await next();
+  };
 };
 
 module.exports = {
