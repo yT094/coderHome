@@ -13,11 +13,6 @@ commentRouter.post("/", verifyAuth, create);
 // 回复评论
 commentRouter.post("/:commentId/reply", verifyAuth, reply);
 // 修改评论
-commentRouter.patch(
-  "/:commentId",
-  verifyAuth,
-  verifyPermission("comment"),
-  update
-);
+commentRouter.patch("/:commentId", verifyAuth, verifyPermission, update);
 
 module.exports = commentRouter;
