@@ -16,6 +16,13 @@ class CommentRouter {
     const result = await commentService.reply(id, momentId, commentId, content);
     ctx.response.body = result;
   }
+
+  async update(ctx, next) {
+    const { commentId } = ctx.params;
+    const { content } = ctx.request.body;
+    const result = await commentService.update(commentId, content);
+    ctx.response.body = result;
+  }
 }
 
 module.exports = new CommentRouter();
