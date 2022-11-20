@@ -7,6 +7,7 @@ const {
   reply,
   update,
   remove,
+  list,
 } = require("../controller/comment.controller");
 const {
   verifyAuth,
@@ -21,5 +22,7 @@ commentRouter.post("/:commentId/reply", verifyAuth, reply);
 commentRouter.patch("/:commentId", verifyAuth, verifyPermission, update);
 // 删除评论
 commentRouter.delete("/:commentId", verifyAuth, verifyPermission, remove);
+// 获取评论列表 (根据 momentId 获取)
+commentRouter.get("/", list);
 
 module.exports = commentRouter;

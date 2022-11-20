@@ -29,6 +29,12 @@ class CommentRouter {
     const result = await commentService.remove(commentId);
     ctx.response.body = result;
   }
+
+  async list(ctx, next) {
+    const { momentId } = ctx.query;
+    const result = await commentService.getCommentsByMomentId(momentId);
+    ctx.response.body = result;
+  }
 }
 
 module.exports = new CommentRouter();
