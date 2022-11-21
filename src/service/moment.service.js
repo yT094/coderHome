@@ -1,4 +1,5 @@
 const connections = require("../app/database");
+const labelService = require("../service/label.service");
 
 const sqlFragment = `
     SELECT
@@ -57,6 +58,23 @@ class MomentService {
     const statement = `DELETE FROM moment WHERE id = ?;`;
     const [result] = await connections.execute(statement, [momentId]);
     return result;
+  }
+
+  async hasLabel(labelName) {
+    const statement = `SELECT * FROM label l WHERE l.name = ?;`;
+    const [result] = await connections.execute(statement, [labelName]);
+    return result[0];
+  }
+
+  async createLabel(labelName) {
+    const result = await labelService.create(labelName);
+    return result;
+  }
+
+  async addMomentIdLabelId(momentId, labelId) {
+    const statement = `INSERT INTO moment_label (moment_id, label_id) VALUES (?,?);`;
+    const result = await connections.execute(statement, [momentId, labelId]);
+    return result[0];
   }
 }
 
