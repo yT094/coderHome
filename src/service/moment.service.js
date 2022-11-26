@@ -60,18 +60,13 @@ class MomentService {
     return result;
   }
 
-  async hasLabel(labelName) {
-    const statement = `SELECT * FROM label l WHERE l.name = ?;`;
-    const [result] = await connections.execute(statement, [labelName]);
-    return result[0];
+  async hasLabel(momentId, labelId) {
+    const statement = `SELECT * FROM moment_label ml WHERE ml.moment_id = ? AND ml.label_id = ?;`;
+    const [result] = await connections.execute(statement, [momentId, labelId]);
+    return result[0] ? true : false;
   }
 
-  async createLabel(labelName) {
-    const result = await labelService.create(labelName);
-    return result;
-  }
-
-  async addMomentIdLabelId(momentId, labelId) {
+  async addLabel(momentId, labelId) {
     const statement = `INSERT INTO moment_label (moment_id, label_id) VALUES (?,?);`;
     const result = await connections.execute(statement, [momentId, labelId]);
     return result[0];
