@@ -12,6 +12,12 @@ class labelService {
     const [result] = await connections.execute(statement, [labelName]);
     return result[0];
   }
+
+  async getLabels(limit, offset) {
+    const statement = `SELECT * FROM label LIMIT ?, ?;`;
+    const [result] = await connections.execute(statement, [limit, offset]);
+    return result;
+  }
 }
 
 module.exports = new labelService();
