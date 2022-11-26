@@ -24,12 +24,18 @@ class MomentService {
         JSON_OBJECT('id', c.id, 'content', c.content, 'commentId', c.comment_id, 'createTime', c.createAt,
                     'user', JSON_OBJECT('id', cu.id, 'name', cu.name)
         )
-      ) comments
+      ) comments,
+      JSON_ARRAYAGG(
+        JSON_OBJECT('id', l.id, 'name', l.name)
+      ) labels
     FROM moment m
     LEFT JOIN users u ON m.user_id = u.id	
     LEFT JOIN comment c ON c.moment_id = m.id
     # moment 的 users 与 comment 的 users 可能不同, 需单独写一个
-    LEFT JOIN users cu ON c.user_id = cu.id    
+    LEFT JOIN users cu ON c.user_id = cu.id
+    # 根据表 moment_label 查询表 label 中的内容
+    LEFT JOIN moment_label ml ON ml.moment_id = m.id
+    LEFT JOIN label l ON ml.label_id = l.id
     WHERE m.id = ?`;
     const [result] = await connections.execute(statement, [momentId]);
     return result[0];
