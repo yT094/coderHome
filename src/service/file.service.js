@@ -18,6 +18,19 @@ class FileService {
     const [result] = await connections.execute(statement, [userId]);
     return result[0];
   }
+
+  async createFile(filename, mimetype, size, userId, momentId) {
+    const statement = `INSERT INTO file (filename, mimetype, size, user_id, moment_id) VALUES (?,?,?,?,?)`;
+    const [result] = await connections.execute(statement, [
+      filename,
+      mimetype,
+      size,
+      userId,
+      momentId,
+    ]);
+
+    return result;
+  }
 }
 
 module.exports = new FileService();
