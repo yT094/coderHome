@@ -14,6 +14,7 @@ const {
   update,
   remove,
   addLabels,
+  fileInfo,
 } = require("../controller/moment.controller");
 
 const momentRouter = new Router({ prefix: "/moment" });
@@ -37,5 +38,8 @@ momentRouter.post(
   verifyLabelExists,
   addLabels
 );
+
+// 动态配图的服务
+momentRouter.get("/images/:filename", fileInfo);
 
 module.exports = momentRouter;

@@ -31,6 +31,12 @@ class FileService {
 
     return result;
   }
+
+  async getFileByFilename(filename) {
+    const statement = `SELET * FROM file WHERE filename = ?;`;
+    const [result] = await connection.execute(statement, [filename]);
+    return result[0];
+  }
 }
 
 module.exports = new FileService();
